@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xe
 
 #move to script directory so all relative paths work
 cd "$(dirname "$0")"
