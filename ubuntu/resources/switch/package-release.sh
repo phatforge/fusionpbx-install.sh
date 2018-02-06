@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -xe
 
 #move to script directory so all relative paths work
 cd "$(dirname "$0")"
@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 . ../colors.sh
 . ../environment.sh
 
-apt-get update && apt-get install -y --force-yes curl memcached haveged apt-transport-https
+apt-get update && apt-get install -y curl memcached haveged apt-transport-https
 if [ ."$cpu_architecture" = ."arm" ]; then
         echo "deb https://repo.fusionpbx.com/armhf jessie main" > /etc/apt/sources.list.d/freeswitch.list
         curl https://repo.fusionpbx.com/public.key | apt-key add -
@@ -17,7 +17,7 @@ else
                 echo "deb https://repo.fusionpbx.com/armhf stretch stable" > /etc/apt/sources.list.d/freeswitch.list
                 curl https://repo.fusionpbx.com/public.key | apt-key add -
         else
-                echo "deb http://files.freeswitch.org/repo/deb/freeswitch-1.6/ jessie main" > /etc/apt/sources.list.d/freeswitch.list
+                echo "deb [ trusted=yes ] http://files.freeswitch.org/repo/deb/debian-unstable/ jessie main" > /etc/apt/sources.list.d/freeswitch.list
                 curl http://files.freeswitch.org/repo/deb/freeswitch-1.6/key.gpg | apt-key add -
         fi
 fi
@@ -31,10 +31,11 @@ apt-get install -y freeswitch-mod-hash freeswitch-mod-esl freeswitch-mod-esf fre
 apt-get install -y freeswitch-mod-sndfile freeswitch-mod-native-file freeswitch-mod-local-stream freeswitch-mod-tone-stream freeswitch-mod-lua freeswitch-meta-mod-say
 apt-get install -y freeswitch-mod-xml-cdr freeswitch-mod-verto freeswitch-mod-callcenter freeswitch-mod-rtc freeswitch-mod-png freeswitch-mod-json-cdr freeswitch-mod-shout
 apt-get install -y freeswitch-mod-sms freeswitch-mod-sms-dbg freeswitch-mod-cidlookup freeswitch-mod-memcache
-apt-get install -y freeswitch-mod-imagick freeswitch-mod-tts-commandline freeswitch-mod-directory
+apt-get install -y freeswitch-mod-tts-commandline freeswitch-mod-directory
 apt-get install -y freeswitch-mod-skypopen freeswitch-mod-skypopen-dbg freeswitch-mod-flite libyuv-dev freeswitch-mod-distributor freeswitch-meta-codecs
 apt-get install -y freeswitch-music-default
 
+apt-get install -y freeswitch-mod-imagick 
 #make sure that postgresql is started before starting freeswitch
 sed -i /lib/systemd/system/freeswitch.service -e s:'local-fs.target:local-fs.target postgresql.service:'
 
